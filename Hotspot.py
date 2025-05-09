@@ -25,7 +25,7 @@ def generateHotspots() -> List[Hotspot]:
     hotspots = []
     attempts = 0
     maxAttempts = 10000
-    #explain random.uniform()
+    
     while len(hotspots) < NUM_HOTSPOTS and attempts < maxAttempts:
         x = random.uniform(0, AREA_SIZE)
         y = random.uniform(0, AREA_SIZE)
@@ -66,7 +66,7 @@ def loadHotspotsFromDb(dbName: str = "hotspots.db") -> List[Hotspot]:
     hotspots = [Hotspot(row[0], row[1], row[2]) for row in cursor.fetchall()]
     conn.close()
     return hotspots
-#explain Tuple
+
 def findInterferingHotspots(hotspots: List[Hotspot]) -> Tuple[List[Tuple[int, int]], set]:
     """Identify pairs of hotspots that interfere with each other."""
     coords = np.array([[h.x, h.y] for h in hotspots])
@@ -93,14 +93,14 @@ def optimizeChannels(hotspots: List[Hotspot], maxIterations: int = 100) -> List[
         if not interferingPairs:
             break
 
-        # Randomly select an interfering hotspot and change its channel
+        #randomly selecting an interfering hotspot and change its channel
         hotspotIDX = random.choice(list(interferingHotspots))
         currentChannel = hotspots[hotspotIDX].channel
         newChannel = random.choice([ch for ch in range(1, NUM_CHANNELS + 1) if ch != currentChannel])
         hotspots[hotspotIDX].channel = newChannel
 
     return interferenceCounts
-#explain whole method
+
 def plotInterferenceTrend(interferenceCounts: List[int], filename: str = "interference_trend.png"):
     """Plot the number of interfering hotspots over iterations."""
     plt.figure(figsize=(8, 6))
@@ -118,13 +118,13 @@ def plotHotspots(hotspots: List[Hotspot], interferingPairs: List[Tuple[int, int]
     plt.figure(figsize=(10, 10))
     colors = {1: 'blue', 2: 'green', 3: 'purple', 4: 'orange', 5: 'cyan'}
 
-    # Plot hotspots
+    #plotting hotspots
     for i, h in enumerate(hotspots):
         edge_color = 'red' if i in interferingHotspots else 'black'
         plt.scatter(h.x, h.y, c=colors[h.channel], s=50, edgecolors=edge_color, linewidth=1.5, 
                     label=f'Channel {h.channel}' if i == 0 or hotspots[i-1].channel != h.channel else "")
 
-    # Plot interference lines
+    #plotting interference lines
     for i, j in interferingPairs:
         plt.plot([hotspots[i].x, hotspots[j].x], [hotspots[i].y, hotspots[j].y], 'r-', linewidth=1)
 
