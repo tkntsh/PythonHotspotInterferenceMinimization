@@ -1,3 +1,5 @@
+#Hotspot.py - Ntokozo Ntshangase
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.spatial import distance_matrix
